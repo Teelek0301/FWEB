@@ -1,0 +1,13 @@
+
+.Home{
+    color: red;
+    display: inline-block;
+    padding: 10px;
+    
+    
+    border-bottom: 3px solid black;
+}
+img{
+    display: inline-block;
+    
+}
