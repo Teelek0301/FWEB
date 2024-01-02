@@ -14,11 +14,7 @@ function Home() {
                 <span className="Home">Announcements</span>
                 <span className="Home">Recently</span>
             </h1>
-            <div className="d-flex flex-column align-items-center">
-                <h5 className="mx-auto">
-                    Hi everyone, there will be training next Tuesday 14/11. Do come by
-                    6.30pm and training will be held at the sports complex
-                </h5>
+            <div className="d-flex flex-wrap justify-content-center align-items-start">
                 <div className="mx-auto">
                     <img
                         src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
@@ -26,8 +22,15 @@ function Home() {
                         width={400}
                     />
                 </div>
+                <div className="d-flex flex-column align-items-center mx-auto">
+                    <h5>
+                        Hi everyone, there will be training next Tuesday 14/11. Do come by
+                        6.30pm and training will be held at the sports complex
+                    </h5>
+                </div>
             </div>
         </div>
+
     );
 }
 
