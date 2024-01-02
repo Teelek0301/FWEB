@@ -27,7 +27,7 @@ function HamburgerMenu() {
                         <Nav.Link href="#" onClick={() => { setExpanded(false); console.log("members clicked"); }}>
                             Members
                         </Nav.Link>
-                        <Nav.Link href="#" onClick={() => { setExpanded(false); console.log("achievement clicked"); }}>
+                        <Nav.Link href="#" to="/Achievement">
                             Achievements
                         </Nav.Link>
                         <Nav.Link href="#" onClick={() => { setExpanded(false); console.log("news clicked"); }}>
