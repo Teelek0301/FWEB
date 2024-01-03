@@ -3,6 +3,7 @@ import Footer from "./components/footer";
 import Home from "./components/home_page";
 import React from "react";
 import Achievement from "./components/achievement_page";
+import Members from "./components/members_page";
 
 import { Route, Routes } from "react-router-dom";
 
@@ -12,8 +13,10 @@ const App = () => {
       <div>
           <HamburgerMenu />
           <Routes >
-              <Route exact path="/" element={<Home/>} />
+              <Route path="/Home" element={<Home/>} />
+              <Route path="/Members" element={<Members/>} />
               <Route path="/Achievement" element={<Achievement/>} />
+              
 
           </Routes>
           <Footer/>

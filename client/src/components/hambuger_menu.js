@@ -21,15 +21,15 @@ function HamburgerMenu() {
                 <FaUser size={20} onClick={() => { console.log("user clicked"); }}></FaUser>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav>
-                        <Nav.Link href="#" onClick={() => { setExpanded(false); console.log("home clicked"); }}>
+                        <NavLink className="text-dark text-decoration-none mb-1" href="#" to="/Home">
                             Home
-                        </Nav.Link>
-                        <Nav.Link href="#" onClick={() => { setExpanded(false); console.log("members clicked"); }}>
+                        </NavLink>
+                        <NavLink className="text-dark text-decoration-none mb-1" href="#" to="/Members">
                             Members
-                        </Nav.Link>
-                        <Nav.Link href="#" to="/Achievement">
+                        </NavLink>
+                        <NavLink className="text-dark text-decoration-none mb-1" href="#" to="/Achievement">
                             Achievements
-                        </Nav.Link>
+                        </NavLink>
                         <Nav.Link href="#" onClick={() => { setExpanded(false); console.log("news clicked"); }}>
                             News
                         </Nav.Link>
