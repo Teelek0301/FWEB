@@ -6,14 +6,14 @@ const router = express.Router();
 
 // This section will help you get a list of all members
 router.get("/", async (req, res) => {
-    let collection = await db.collection("taekwondo");
+    let collection = await db.collection("members");
     let result = await collection.find({}).toArray();
     res.send(result).status(200);
 });
 
 // This section will help you get a single member by id
 router.get("/:id", async (req, res) => {
-    let collection = await db.collection("taekwondo");
+    let collection = await db.collection("members");
     let query = { _id: new ObjectId(req.params.id) };
     let result = await collection.findOne(query);
 
@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
         password,
         matriculation_Number
     };
-    let collection = await db.collection("taekwondo");
+    let collection = await db.collection("members");
     let result = await collection.insertOne(newDocument);
 
     res.status(201).send(result);
@@ -65,7 +65,7 @@ router.patch("/:id", async (req, res) => {
     }
 
     // Check for missing values
-    if (!updates.$set.name || !updates.$set.email || !updates.$set.mobile) {
+    if (!updates.$set.name || !updates.$set.email || !updates.$set.mobile || !updates.$set.age) {
         res.status(400).send("Missing values in the request.");
         return;
     }
@@ -84,7 +84,7 @@ router.patch("/:id", async (req, res) => {
         return;
     }
 
-    let collection = await db.collection("records");
+    let collection = await db.collection("members");
     let result = await collection.updateOne(query, updates);
 
     res.status(200).send(result);
