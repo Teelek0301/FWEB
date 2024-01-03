@@ -1,0 +1,10 @@
+.members-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .members{
+    margin-right: 20px;
+    
+  }
+  
