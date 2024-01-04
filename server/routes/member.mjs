@@ -60,7 +60,10 @@ router.patch("/:id", async (req, res) => {
     const updates = {
         $set: {
             name: req.body.name,
-            
+            email: req.body.email,
+            mobile: req.body.mobile,
+            age: req.body.age
+
         }
     }
 
@@ -91,19 +94,24 @@ router.patch("/:id", async (req, res) => {
 });
 
 
-// This section will help you delete a record
 router.delete("/:id", async (req, res) => {
-    const query = { _id: new ObjectId(req.params.id) };
+    try {
+        const query = { _id: new ObjectId(req.params.id) };
 
-    const collection = await db.collection("records");
-    const result = await collection.deleteOne(query);
+        const collection = await db.collection("members");
+        const result = await collection.deleteOne(query);
 
-    if (result.deletedCount === 1) {
-        // Record was deleted
-        res.status(200).send("Record deleted successfully.");
-    } else {
-        // No record was deleted, indicating it's already deleted or not found
-        res.status(200).send("Record is already deleted or not found.");
+        if (result.deletedCount === 1) {
+            // Member was deleted
+            res.status(200).send("Member deleted successfully.");
+        } else {
+            // No Member was deleted, indicating it's already deleted or not found
+            res.status(404).send("Member not found or already deleted.");
+        }
+    } catch (error) {
+        // Handle other errors
+        console.error("Error deleting member:", error);
+        res.status(500).send("Internal Server Error");
     }
 });
 
