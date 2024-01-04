@@ -3,6 +3,7 @@ import { Navbar, Nav, NavbarBrand } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import { NavLink } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import "./hamburger_menu.css";
 
 function HamburgerMenu() {
@@ -18,7 +19,9 @@ function HamburgerMenu() {
                 <NavbarBrand className="mx-5" href="#" >
                     <span class="navbar-brand mb-0 h1">TaeKwonConnect</span>
                 </NavbarBrand>
-                <FaUser size={20} onClick={() => { console.log("user clicked"); }}></FaUser>
+                <Link color="black" to="/SignUp">
+                    <FaUser size={20} color="black"/>
+                </Link>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav>
                         <NavLink className="text-dark text-decoration-none mb-1" href="#" to="/Home">
@@ -30,12 +33,10 @@ function HamburgerMenu() {
                         <NavLink className="text-dark text-decoration-none mb-1" href="#" to="/Achievement">
                             Achievements
                         </NavLink>
-                        <Nav.Link href="#" onClick={() => { setExpanded(false); console.log("news clicked"); }}>
+                        <NavLink className="text-dark text-decoration-none mb-1" href="#" to="/News">
                             News
-                        </Nav.Link>
-                        <Nav.Link >
+                        </NavLink>
 
-                        </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
 

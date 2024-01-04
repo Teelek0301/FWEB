@@ -23,7 +23,7 @@ router.get("/:id", async (req, res) => {
 
 // This section will help you register a new member
 router.post("/", async (req, res) => {
-    const { name, password, matriculation_Number } = req.body;
+    const { name, password, matriculation_number } = req.body;
 
 
     // Validate password
@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
     let newDocument = {
         name,
         password,
-        matriculation_Number
+        matriculation_number
     };
     let collection = await db.collection("members");
     let result = await collection.insertOne(newDocument);
