@@ -14,7 +14,7 @@ function Home() {
                 <span className="Home">Announcements</span>
                 <span className="Home">Recently</span>
             </h1>
-            <div className="d-flex flex-wrap justify-content-center align-items-start">
+            <div className="d-flex align-items-start">
                 <div className="mx-auto">
                     <img
                         src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
