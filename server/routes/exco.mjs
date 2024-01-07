@@ -5,24 +5,24 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-// This section will help you get a list of all members
+// This section will help you get a list of all excos
 router.get("/", async (req, res) => {
-    let collection = await db.collection("members");
+    let collection = await db.collection("excos");
     let result = await collection.find({}).toArray();
     res.send(result).status(200);
 });
 
-// This section will help you get a single member by id
+// This section will help you get a single Exco by id
 router.get("/:id", async (req, res) => {
-    let collection = await db.collection("members");
+    let collection = await db.collection("excos");
     let query = { _id: new ObjectId(req.params.id) };
     let result = await collection.findOne(query);
 
-    if (!result) res.send("Member not found!").status(404);
+    if (!result) res.send("Exco not found!").status(404);
     else res.send(result).status(200);
 });
 
-// This section will help you register a new member
+// This section will help you register a new Exco
 router.post("/", async (req, res) => {
     const { name, password, matriculation_number, title, age } = req.body;
 
@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
         title,
         age
     };
-    let collection = await db.collection("members");
+    let collection = await db.collection("excos");
     let result = await collection.insertOne(newDocument);
 
     res.status(201).send(result);
@@ -90,7 +90,7 @@ router.patch("/:id", async (req, res) => {
         return;
     }
 
-    let collection = await db.collection("members");
+    let collection = await db.collection("excos");
     let result = await collection.updateOne(query, updates);
 
     res.status(200).send(result);
@@ -101,19 +101,19 @@ router.delete("/:id", async (req, res) => {
     try {
         const query = { _id: new ObjectId(req.params.id) };
 
-        const collection = await db.collection("members");
+        const collection = await db.collection("excos");
         const result = await collection.deleteOne(query);
 
         if (result.deletedCount === 1) {
-            // Member was deleted
-            res.status(200).send("Member deleted successfully.");
+            // Exco was deleted
+            res.status(200).send("Exco deleted successfully.");
         } else {
-            // No Member was deleted, indicating it's already deleted or not found
-            res.status(404).send("Member not found or already deleted.");
+            // No Exco was deleted, indicating it's already deleted or not found
+            res.status(404).send("Exco not found or already deleted.");
         }
     } catch (error) {
         // Handle other errors
-        console.error("Error deleting member:", error);
+        console.error("Error deleting Exco:", error);
         res.status(500).send("Internal Server Error");
     }
 });

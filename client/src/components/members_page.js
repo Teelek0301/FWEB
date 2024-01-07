@@ -6,6 +6,36 @@ import { NavLink } from "react-router-dom";
 import "./members_page.css"
 import { ButtonToolbar } from "react-bootstrap";
 
+const Coach = (props) => (
+    <div className="members">
+        <section className=" text-center">
+            <img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
+                alt="image"
+                width={170}
+                className="ms-4 rounded-circle"
+            />
+            <h5>{props.coach.name} <FaEdit /></h5>
+            <h6>{props.coach.title}, {props.coach.age}</h6>
+        </section>
+    </div>
+);
+
+const Exco = (props) => (
+    <div className="members">
+        <section className=" text-center">
+            <img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
+                alt="image"
+                width={170}
+                className="ms-4 rounded-circle"
+            />
+            <h5>{props.exco.name} <FaEdit /></h5>
+            <h6>{props.exco.title}, {props.exco.age}</h6>
+        </section>
+    </div>
+);
+
 const Member = (props) => (
     <div className="members">
         <section className=" text-center">
@@ -16,27 +46,48 @@ const Member = (props) => (
                 className="ms-4 rounded-circle"
             />
             <h5>{props.member.name} <FaEdit /></h5>
-            <h6>Grandmaster, 56</h6>
+            <h6>{props.member.title}, {props.member.age}</h6>
         </section>
     </div>
-
-
-
-
-
-
-
-
-
 );
 
 
 function Members() {
+    const [coaches, setCoaches] = useState([]);
+    const [excos, setExcos] = useState([]);
     const [members, setMembers] = useState([]);
 
     useEffect(() => {
+        async function getCoaches() {
+            const response = await fetch(`http://localhost:5050/coaches`);
+            if (!response.ok) {
+                const message = `An error occured: ${response.statusText}`;
+                window.alert(message);
+                return;
+            }
+
+            const coaches = await response.json();
+            setCoaches(coaches);
+        }
+
+
+
+        async function getExcos() {
+            const response = await fetch(`http://localhost:5050/excos`);
+            if (!response.ok) {
+                const message = `An error occured: ${response.statusText}`;
+                window.alert(message);
+                return;
+            }
+
+            const excos = await response.json();
+            setExcos(excos);
+        }
+
+
+
         async function getMembers() {
-            const response = await fetch(`http://localhost:5050/taekwondo`);
+            const response = await fetch(`http://localhost:5050/members`);
             if (!response.ok) {
                 const message = `An error occured: ${response.statusText}`;
                 window.alert(message);
@@ -46,10 +97,39 @@ function Members() {
             const members = await response.json();
             setMembers(members);
         }
+
+        getCoaches();
+        getExcos();
         getMembers();
         return;
 
-    }, [members.length]);
+    }, [coaches.length], [excos.length], [members.length]);
+
+
+    function CoachList() {
+        return coaches.map((coach) => {
+            return (
+                <Coach
+                    coach={coach}
+                    key={coach.id}
+
+                />
+            );
+        });
+    }
+
+    function ExcoList() {
+        return excos.map((exco) => {
+            return (
+                <Exco
+                    exco={exco}
+                    key={exco.id}
+
+                />
+            );
+        });
+    }
+
 
     function MemberList() {
         return members.map((member) => {
@@ -80,16 +160,11 @@ function Members() {
 
 
                         </h3>
-                        <button type="button" class="btn btn-outline-primary mb-3">Add Coach</button>
+                        <button type="button" className="btn btn-outline-primary mb-3">Add Coach</button>
                     </div>
                     <div className="members-container">
-                        
 
-                            {MemberList()}
-
-
-
-                        
+                        {CoachList()}
 
                     </div>
 
@@ -101,37 +176,13 @@ function Members() {
                             Exco{' '}
                             <FaTrophy size={20} className="mb-1" color="yellow" />
                         </h3>
-                        <button type="button" class="btn btn-outline-primary mb-3">Add Exco</button>
+                        <button type="button" className="btn btn-outline-primary mb-3">Add Exco</button>
                     </div>
                     <div className="members-container">
-                        <div className="members">
-                            <section className=" text-center">
-                                <img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
-                                    alt="image"
-                                    width={170}
-                                    className="ms-4 rounded-circle"
-                                />
-                                <h5>Micheal Sir <FaEdit /></h5>
-                                <h6>Grandmaster, 56</h6>
-                            </section>
 
+                        {ExcoList()}
 
-                        </div>
-                        <div className="members">
-                            <section className=" text-center">
-                                <img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
-                                    alt="image"
-                                    width={170}
-                                    className="ms-4 rounded-circle"
-                                />
-                                <h5>Micheal Sir <FaEdit /></h5>
-                                <h6>Grandmaster, 56</h6>
-                            </section>
-
-
-                        </div>
+                        
                     </div>
                 </div>
 
@@ -141,23 +192,11 @@ function Members() {
                             Members{' '}
                             <FaStar size={20} className="mb-1" color="yellow" />
                         </h3>
-                        <button type="button" class="btn btn-outline-primary mb-3">Add Member</button>
+                        <button type="button" className="btn btn-outline-primary mb-3">Add Member</button>
                     </div>
                     <div className="members-container">
-                        <div className="members">
-                            <section className=" text-center">
-                                <img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
-                                    alt="image"
-                                    width={170}
-                                    className="ms-4 rounded-circle"
-                                />
-                                <h5>Micheal Sir <FaEdit /></h5>
-                                <h6>Grandmaster, 56</h6>
-                            </section>
 
-
-                        </div>
+                        {MemberList()}
 
                     </div>
                 </div>
