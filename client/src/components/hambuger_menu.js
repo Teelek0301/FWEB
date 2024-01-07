@@ -17,7 +17,7 @@ function HamburgerMenu() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(!expanded)} />
 
                 <NavbarBrand className="mx-5" href="#" >
-                    <span class="navbar-brand mb-0 h1">TaeKwonConnect</span>
+                    <span className="navbar-brand mb-0 h1">TaeKwonConnect</span>
                 </NavbarBrand>
                 <Link color="black" to="/SignUp">
                     <FaUser size={20} color="black"/>
