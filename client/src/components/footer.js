@@ -10,7 +10,7 @@ function Footer() {
 
     return (
         <div>
-            <footer className="footer mt-5*3 py-3 bg-dark ">
+            <footer className="footer mt-5 py-3 bg-dark ">
                 <div className="container text-center">
                     <span className="text-white" >@TaeKwonConnect</span>
                 </div>
