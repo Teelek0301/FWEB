@@ -7,7 +7,7 @@ import "./members_page.css"
 import { ButtonToolbar } from "react-bootstrap";
 
 const Coach = (props) => (
-    <div className="members">
+    <NavLink className="members text-dark text-decoration-none" to="/SelectedMember">
         <section className=" text-center">
             <img
                 src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
@@ -18,11 +18,12 @@ const Coach = (props) => (
             <h5>{props.coach.name} <FaEdit /></h5>
             <h6>{props.coach.title}, {props.coach.age}</h6>
         </section>
-    </div>
+        
+    </NavLink>
 );
 
 const Exco = (props) => (
-    <div className="members">
+    <NavLink className="members text-dark text-decoration-none" to="/SelectedMember">
         <section className=" text-center">
             <img
                 src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
@@ -33,11 +34,11 @@ const Exco = (props) => (
             <h5>{props.exco.name} <FaEdit /></h5>
             <h6>{props.exco.title}, {props.exco.age}</h6>
         </section>
-    </div>
+    </NavLink>
 );
 
 const Member = (props) => (
-    <div className="members">
+    <NavLink className="members text-dark text-decoration-none" to="/SelectedMember" >
         <section className=" text-center">
             <img
                 src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
@@ -48,7 +49,7 @@ const Member = (props) => (
             <h5>{props.member.name} <FaEdit /></h5>
             <h6>{props.member.title}, {props.member.age}</h6>
         </section>
-    </div>
+    </NavLink>
 );
 
 
