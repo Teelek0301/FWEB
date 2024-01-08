@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 
 
 
-function SelectedMember() {
+function SelectedExco() {
 
     return (
         <div className="mt-5 mb-5">
@@ -62,4 +62,4 @@ function SelectedMember() {
     );
 }
 
-export default SelectedMember;
+export default SelectedExco;

@@ -7,7 +7,8 @@ import Members from "./components/members_page";
 import News from "./components/news_page";
 import SignUp from "./components/signup_page";
 import SelectedMember from "./components/selectedMember_page";
-
+import SelectedCoach from "./components/selectedCoach_page";
+import SelectedExco from "./components/selectedExco_page";
 import { Route, Routes } from "react-router-dom";
 
 
@@ -22,7 +23,9 @@ const App = () => {
               <Route path="/Achievement" element={<Achievement/>} />
               <Route path="/News" element={<News/>} />
               <Route path="/SignUp" element={<SignUp/>} />
-              <Route path="/SelectedMember" element={<SelectedMember/>} />
+              <Route path="/SelectedCoach/:id" element={<SelectedCoach/>} />
+              <Route path="/SelectedExco/:id" element={<SelectedExco/>} />
+              <Route path="/SelectedMember/:id" element={<SelectedMember/>} />
               
 
           </Routes>

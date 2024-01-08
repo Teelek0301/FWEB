@@ -4,10 +4,10 @@ import "bootstrap/dist/css/bootstrap.css";
 import { FaHeart, FaTrophy, FaStar, FaEdit } from 'react-icons/fa';
 import { NavLink } from "react-router-dom";
 import "./members_page.css"
-import { ButtonToolbar } from "react-bootstrap";
+
 
 const Coach = (props) => (
-    <NavLink className="members text-dark text-decoration-none" to="/SelectedMember">
+    <NavLink className="members text-dark text-decoration-none" to={`/SelectedCoach/${props.coach._id}`}>
         <section className=" text-center">
             <img
                 src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
@@ -23,7 +23,7 @@ const Coach = (props) => (
 );
 
 const Exco = (props) => (
-    <NavLink className="members text-dark text-decoration-none" to="/SelectedMember">
+    <NavLink className="members text-dark text-decoration-none" to={`/SelectedExco/${props.exco._id}`}>
         <section className=" text-center">
             <img
                 src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
@@ -38,7 +38,7 @@ const Exco = (props) => (
 );
 
 const Member = (props) => (
-    <NavLink className="members text-dark text-decoration-none" to="/SelectedMember" >
+    <NavLink className="members text-dark text-decoration-none" to={`/SelectedMember/${props.member._id}`} >
         <section className=" text-center">
             <img
                 src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
