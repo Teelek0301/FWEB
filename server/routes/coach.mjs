@@ -63,31 +63,21 @@ router.patch("/:id", async (req, res) => {
     const updates = {
         $set: {
             name: req.body.name,
-            email: req.body.email,
-            mobile: req.body.mobile,
-            age: req.body.age
+            age: req.body.age,
+            belt: req.body.belt,
+            achievement: req.body.achievement,
+            height: req.body.height,
+            aboutMe: req.body.aboutMe,
+            title: req.body.title,
+            matriculation_number: req.body.matriculation_number
+
+
+
+
+
+
 
         }
-    }
-
-    // Check for missing values
-    if (!updates.$set.name || !updates.$set.email || !updates.$set.mobile || !updates.$set.age) {
-        res.status(400).send("Missing values in the request.");
-        return;
-    }
-
-    // Validate email format
-    const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-    if (!emailRegex.test(updates.$set.email)) {
-        res.status(400).send("Invalid email format.");
-        return;
-    }
-
-    // Validate mobile format (8-digit number)
-    const mobileRegex = /^[0-9]{8}$/;
-    if (!mobileRegex.test(updates.$set.mobile)) {
-        res.status(400).send("Mobile must be an 8-digit number.");
-        return;
     }
 
     let collection = await db.collection("coaches");
