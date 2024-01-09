@@ -9,6 +9,7 @@ import SignUp from "./components/signup_page";
 import SelectedMember from "./components/selectedMember_page";
 import SelectedCoach from "./components/selectedCoach_page";
 import SelectedExco from "./components/selectedExco_page";
+import EditCoach from "./components/EditCoach_page";
 import { Route, Routes } from "react-router-dom";
 
 
@@ -26,6 +27,7 @@ const App = () => {
               <Route path="/SelectedCoach/:id" element={<SelectedCoach/>} />
               <Route path="/SelectedExco/:id" element={<SelectedExco/>} />
               <Route path="/SelectedMember/:id" element={<SelectedMember/>} />
+              <Route path="/EditCoach/:id" element={<EditCoach/>} />
               
 
           </Routes>

@@ -2,7 +2,7 @@ import React, { useEffect, useState, } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
 import { FaCalendar, FaWalking, FaArrowCircleUp, FaTrophy, FaUser, FaSchool, FaAddressCard } from 'react-icons/fa';
-import { useParams } from "react-router-dom";
+import { useParams, NavLink } from "react-router-dom";
 
 
 
@@ -45,6 +45,9 @@ const Coach = (props) => (
                 <h5>
                     <FaSchool color="violet" /> School Matriculation Number : {props.coach.matriculation_number}
                 </h5>
+                <NavLink color="blue" href="#" to={`/EditCoach/${props.coach._id}`}>
+                    Edit this member
+                </NavLink>
 
             </div>
 
@@ -57,7 +60,7 @@ const Coach = (props) => (
 
 function SelectedCoach() {
     const [coach, setCoach] = useState([]);
-    const {id} = useParams();
+    const { id } = useParams();
 
 
     useEffect(() => {
@@ -78,11 +81,12 @@ function SelectedCoach() {
 
     }, [id]);
 
-    
+
 
     return (
         <div className="mt-5 mb-5">
             <Coach coach={coach} />
+
         </div>
 
 
