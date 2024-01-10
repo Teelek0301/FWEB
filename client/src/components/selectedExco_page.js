@@ -86,6 +86,10 @@ function SelectedExco() {
     }, [id]);
 
     async function deleteExco(id) {
+        const confirmDeletion = window.confirm("Are you sure you want to delete this member?");
+        if (!confirmDeletion) {
+            return;
+        }
         await fetch(`http://localhost:5050/excos/${id}`, {
             method: "DELETE"
         });

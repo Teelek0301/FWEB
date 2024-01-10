@@ -1,8 +1,8 @@
-import React, { useEffect, useState,  } from "react";
+import React, { useEffect, useState, } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
 import { FaCalendar, FaWalking, FaArrowCircleUp, FaTrophy, FaUser, FaSchool, FaAddressCard } from 'react-icons/fa';
-import { useParams, NavLink,useNavigate } from "react-router-dom";
+import { useParams, NavLink, useNavigate } from "react-router-dom";
 
 
 
@@ -85,12 +85,16 @@ function SelectedMember() {
     }, [id]);
 
     async function deleteMember(id) {
+        const confirmDeletion = window.confirm("Are you sure you want to delete this member?");
+        if (!confirmDeletion) {
+          return;
+        }
         await fetch(`http://localhost:5050/members/${id}`, {
             method: "DELETE"
         });
 
         navigate("/Members");
-        
+
     }
 
     return (

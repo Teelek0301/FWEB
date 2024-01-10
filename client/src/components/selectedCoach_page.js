@@ -2,7 +2,7 @@ import React, { useEffect, useState, } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
 import { FaCalendar, FaWalking, FaArrowCircleUp, FaTrophy, FaUser, FaSchool, FaAddressCard } from 'react-icons/fa';
-import { useParams, NavLink,useNavigate } from "react-router-dom";
+import { useParams, NavLink, useNavigate } from "react-router-dom";
 
 
 
@@ -86,19 +86,24 @@ function SelectedCoach() {
     }, [id]);
 
     async function deleteCoach(id) {
+
+        const confirmDeletion = window.confirm("Are you sure you want to delete this member?");
+        if (!confirmDeletion) {
+            return;
+        }
         await fetch(`http://localhost:5050/coaches/${id}`, {
             method: "DELETE"
         });
 
         navigate("/Members");
-        
+
     }
 
 
 
     return (
         <div className="mt-5 mb-5">
-            <Coach coach={coach}  deleteCoach={() => deleteCoach(coach._id)} />
+            <Coach coach={coach} deleteCoach={() => deleteCoach(coach._id)} />
 
         </div>
 
