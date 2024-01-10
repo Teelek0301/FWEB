@@ -4,8 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 
 
 
-function EditCoach() {
-    const [coach, setCoach] = useState({
+function EditExco() {
+    const [exco, setExco] = useState({
         name: "",
         age: "",
         belt: "",
@@ -21,7 +21,7 @@ function EditCoach() {
 
 
     function updateForm(value) {
-        setCoach((prev) => {
+        setExco((prev) => {
             return { ...prev, ...value };
         });
     }
@@ -29,10 +29,10 @@ function EditCoach() {
 
     async function onSubmit(e) {
         e.preventDefault();
-        const updatePerson = { ...coach};
+        const updatePerson = { ...exco};
 
-        // Use the correct endpoint for updating a specific coach based on the ID
-        await fetch(`http://localhost:5050/coaches/${id}`, {
+        // Use the correct endpoint for updating a specific exco based on the ID
+        await fetch(`http://localhost:5050/excos/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -50,8 +50,8 @@ function EditCoach() {
     }
 
     useEffect(() => {
-        async function getCoach(id) {
-            const response = await fetch(`http://localhost:5050/coaches/${id}`);
+        async function getExco(id) {
+            const response = await fetch(`http://localhost:5050/excos/${id}`);
             if (!response.ok) {
                 const message = `An error occurred: ${response.statusText}`;
                 window.alert(message);
@@ -59,10 +59,10 @@ function EditCoach() {
             }
 
             const coachData = await response.json();
-            setCoach(coachData);
+            setExco(coachData);
         }
 
-        getCoach(id);
+        getExco(id);
     }, [id]);
 
     return (
@@ -83,7 +83,7 @@ function EditCoach() {
                                     <input
                                         type="text"
                                         id="name"
-                                        value={coach.name}
+                                        value={exco.name}
                                         onChange={(e) => updateForm({ name: e.target.value })}
                                     />!
                                 </h5>
@@ -95,7 +95,7 @@ function EditCoach() {
                                 <input
                                     type="text"
                                     id="age"
-                                    value={coach.age}
+                                    value={exco.age}
                                     onChange={(e) => updateForm({ age: e.target.value })}
                                 />
                             </h5>
@@ -104,7 +104,7 @@ function EditCoach() {
                                 <input
                                     type="text"
                                     id="belt"
-                                    value={coach.belt}
+                                    value={exco.belt}
                                     onChange={(e) => updateForm({ belt: e.target.value })}
                                 />
                             </h5>
@@ -113,7 +113,7 @@ function EditCoach() {
                                 <input
                                     type="text"
                                     id="achievement"
-                                    value={coach.achievement}
+                                    value={exco.achievement}
                                     onChange={(e) => updateForm({ achievement: e.target.value })}
                                 />
                             </h5>
@@ -122,7 +122,7 @@ function EditCoach() {
                                 <input
                                     type="text"
                                     id="height"
-                                    value={coach.height}
+                                    value={exco.height}
                                     onChange={(e) => updateForm({ height: e.target.value })}
                                 />
                             </h5>
@@ -131,7 +131,7 @@ function EditCoach() {
                                 <input
                                     type="text"
                                     id="aboutMe"
-                                    value={coach.aboutMe}
+                                    value={exco.aboutMe}
                                     onChange={(e) => updateForm({ aboutMe: e.target.value })}
                                 />
                             </h5>
@@ -140,7 +140,7 @@ function EditCoach() {
                                 <input
                                     type="text"
                                     id="title"
-                                    value={coach.title}
+                                    value={exco.title}
                                     onChange={(e) => updateForm({ title: e.target.value })}
                                 />
                             </h5>
@@ -149,7 +149,7 @@ function EditCoach() {
                                 <input
                                     type="text"
                                     id="matriculation_ number"
-                                    value={coach.matriculation_number}
+                                    value={exco.matriculation_number}
                                     onChange={(e) => updateForm({ matriculation_number: e.target.value })}
                                 />
                             </h5>
@@ -164,4 +164,4 @@ function EditCoach() {
     );
 }
 
-export default EditCoach;
+export default EditExco;

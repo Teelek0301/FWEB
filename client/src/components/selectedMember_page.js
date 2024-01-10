@@ -1,8 +1,8 @@
-import React , { useEffect, useState, } from "react";
+import React, { useEffect, useState,  } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
-import { FaCalendar, FaWalking, FaArrowCircleUp,FaTrophy, FaUser, FaSchool, FaAddressCard  } from 'react-icons/fa';
-import { useParams } from "react-router-dom";
+import { FaCalendar, FaWalking, FaArrowCircleUp, FaTrophy, FaUser, FaSchool, FaAddressCard } from 'react-icons/fa';
+import { useParams, NavLink,useNavigate } from "react-router-dom";
 
 
 
@@ -21,6 +21,9 @@ const Member = (props) => (
                     <h5 className="mt-3">
                         Hello my name is {props.member.name}!
                     </h5>
+                    <button type="button" class="btn btn-danger" onClick={() => {
+                        props.deleteMember(props.member._id);
+                    }}>Delete Member</button>
                 </div>
             </div>
             <div className="col-6 ">
@@ -45,6 +48,10 @@ const Member = (props) => (
                 <h5>
                     <FaSchool color="violet" /> School Matriculation Number : {props.member.matriculation_number}
                 </h5>
+                <NavLink color="blue" href="#" to={`/EditMember/${props.member._id}`}>
+                    Edit this member
+                </NavLink>
+
 
             </div>
 
@@ -56,33 +63,40 @@ const Member = (props) => (
 
 function SelectedMember() {
     const [member, setMember] = useState([]);
-    const {id} = useParams();
+    const { id } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function getMember(id) {
             const response = await fetch(`http://localhost:5050/members/${id}`);
             if (!response.ok) {
-                const message = `An error occured: ${response.statusText}`;
+                const message = `An error occurred: ${response.statusText}`;
                 window.alert(message);
                 return;
             }
 
-            const member = await response.json();
-            setMember(member);
+            const memberData = await response.json();
+            setMember(memberData);
         }
+
         getMember(id);
 
         return;
-
     }, [id]);
+
+    async function deleteMember(id) {
+        await fetch(`http://localhost:5050/members/${id}`, {
+            method: "DELETE"
+        });
+
+        navigate("/Members");
+        
+    }
 
     return (
         <div className="mt-5 mb-5">
-            <Member member={member} />
-
+            <Member member={member} deleteMember={() => deleteMember(member._id)} />
         </div>
-
-
     );
 }
 

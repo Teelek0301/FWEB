@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
-import { FaHeart, FaTrophy, FaStar, FaEdit } from 'react-icons/fa';
+import { FaHeart, FaTrophy, FaStar } from 'react-icons/fa';
 import { NavLink } from "react-router-dom";
 import "./members_page.css"
 
@@ -15,7 +15,7 @@ const Coach = (props) => (
                 width={170}
                 className="ms-4 rounded-circle"
             />
-            <h5>{props.coach.name} <FaEdit /></h5>
+            <h5>{props.coach.name}</h5>
             <h6>{props.coach.title}, {props.coach.age}</h6>
         </section>
         
@@ -31,7 +31,7 @@ const Exco = (props) => (
                 width={170}
                 className="ms-4 rounded-circle"
             />
-            <h5>{props.exco.name} <FaEdit /></h5>
+            <h5>{props.exco.name}</h5>
             <h6>{props.exco.title}, {props.exco.age}</h6>
         </section>
     </NavLink>
@@ -46,7 +46,7 @@ const Member = (props) => (
                 width={170}
                 className="ms-4 rounded-circle"
             />
-            <h5>{props.member.name} <FaEdit /></h5>
+            <h5>{props.member.name}</h5>
             <h6>{props.member.title}, {props.member.age}</h6>
         </section>
     </NavLink>
@@ -161,7 +161,7 @@ function Members() {
 
 
                         </h3>
-                        <button type="button" className="btn btn-outline-primary mb-3">Add Coach</button>
+                        {/* <button type="button" className="btn btn-outline-primary mb-3">Add Coach</button> */}
                     </div>
                     <div className="members-container">
 
@@ -177,7 +177,7 @@ function Members() {
                             Exco{' '}
                             <FaTrophy size={20} className="mb-1" color="yellow" />
                         </h3>
-                        <button type="button" className="btn btn-outline-primary mb-3">Add Exco</button>
+                        {/* <button type="button" className="btn btn-outline-primary mb-3">Add Exco</button> */}
                     </div>
                     <div className="members-container">
 
@@ -193,7 +193,7 @@ function Members() {
                             Members{' '}
                             <FaStar size={20} className="mb-1" color="yellow" />
                         </h3>
-                        <button type="button" className="btn btn-outline-primary mb-3">Add Member</button>
+                        {/* <button type="button" className="btn btn-outline-primary mb-3">Add Member</button> */}
                     </div>
                     <div className="members-container">
 

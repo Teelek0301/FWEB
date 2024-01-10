@@ -1,8 +1,8 @@
-import React, { useEffect, useState, }  from "react";
+import React, { useEffect, useState, } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
-import { FaCalendar, FaWalking, FaArrowCircleUp,FaTrophy, FaUser, FaSchool, FaAddressCard  } from 'react-icons/fa';
-import { useParams } from "react-router-dom";
+import { FaCalendar, FaWalking, FaArrowCircleUp, FaTrophy, FaUser, FaSchool, FaAddressCard } from 'react-icons/fa';
+import { useParams, NavLink, useNavigate } from "react-router-dom";
 
 
 
@@ -22,6 +22,9 @@ const Exco = (props) => (
                     <h5 className="mt-3">
                         Hello my name is {props.exco.name}!
                     </h5>
+                    <button type="button" class="btn btn-danger" onClick={() => {
+                        props.deleteExco(props.exco._id);
+                    }}>Delete Member</button>
                 </div>
             </div>
             <div className="col-6 ">
@@ -46,6 +49,10 @@ const Exco = (props) => (
                 <h5>
                     <FaSchool color="violet" /> School Matriculation Number : {props.exco.matriculation_number}
                 </h5>
+                <NavLink color="blue" href="#" to={`/EditExco/${props.exco._id}`}>
+                    Edit this member
+                </NavLink>
+
 
             </div>
 
@@ -56,7 +63,8 @@ const Exco = (props) => (
 
 function SelectedExco() {
     const [exco, setExco] = useState([]);
-    const {id} = useParams();
+    const { id } = useParams();
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -77,9 +85,18 @@ function SelectedExco() {
 
     }, [id]);
 
+    async function deleteExco(id) {
+        await fetch(`http://localhost:5050/excos/${id}`, {
+            method: "DELETE"
+        });
+
+        navigate("/Members");
+
+    }
+
     return (
         <div className="mt-5 mb-5">
-            <Exco exco={exco} />
+            <Exco exco={exco} deleteExco={() => deleteExco(exco._id)} />
 
         </div>
 
