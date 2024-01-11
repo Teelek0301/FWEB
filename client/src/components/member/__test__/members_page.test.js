@@ -1,12 +1,33 @@
-// import {render, screen} from '@testing-library/react';
-// import Members from '../members_page';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import Members from '../members_page';
+import React from 'react';
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Members 
-//         />
-//     );
-//     const h1Element = screen.getByText(/todo/i);
-//     expect(h1Element).toBeInTheDocument();
-// });
+jest.mock('react-router-dom', () => ({
+  NavLink: 'div',
+}));
 
+jest.mock('../members_page.css', () => ({}));
+
+describe('Members', () => {
+  beforeEach(() => {
+    jest.spyOn(global, 'fetch').mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([]),
+      })
+    );
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test('renders Members component without crashing', () => {
+    render(<Members />);
+    const elements = screen.getAllByRole('heading', { name: /Members/i });
+    elements.forEach(element => {
+      expect(element).toBeInTheDocument();
+    });
+  });
+});

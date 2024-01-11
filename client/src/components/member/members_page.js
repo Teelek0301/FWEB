@@ -18,7 +18,7 @@ const Coach = (props) => (
             <h5>{props.coach.name}</h5>
             <h6>{props.coach.title}, {props.coach.age}</h6>
         </section>
-        
+
     </NavLink>
 );
 
@@ -61,8 +61,8 @@ function Members() {
     useEffect(() => {
         async function getCoaches() {
             const response = await fetch(`http://localhost:5050/coaches`);
-            if (!response.ok) {
-                const message = `An error occured: ${response.statusText}`;
+            if (!response || !response.ok) {
+                const message = `An error occured: ${response ? response.statusText : 'Server not reachable'}`;
                 window.alert(message);
                 return;
             }
@@ -75,7 +75,7 @@ function Members() {
 
         async function getExcos() {
             const response = await fetch(`http://localhost:5050/excos`);
-            if (!response.ok) {
+            if (!response.ok || !response.ok) {
                 const message = `An error occured: ${response.statusText}`;
                 window.alert(message);
                 return;
@@ -88,15 +88,19 @@ function Members() {
 
 
         async function getMembers() {
-            const response = await fetch(`http://localhost:5050/members`);
-            if (!response.ok) {
-                const message = `An error occured: ${response.statusText}`;
-                window.alert(message);
-                return;
-            }
+            try {
+                const response = await fetch(`http://localhost:5050/members`);
+                if (!response.ok || !response.ok) {
+                    const message = `An error occurred: ${response.statusText}`;
+                    window.alert(message);
+                    return;
+                }
 
-            const members = await response.json();
-            setMembers(members);
+                const members = await response.json();
+                setMembers(members);
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
 
         getCoaches();
@@ -104,7 +108,7 @@ function Members() {
         getMembers();
         return;
 
-    }, [coaches.length], [excos.length], [members.length]);
+    }, [coaches.length, excos.length, members.length]);
 
 
     function CoachList() {
@@ -183,7 +187,7 @@ function Members() {
 
                         {ExcoList()}
 
-                        
+
                     </div>
                 </div>
 
