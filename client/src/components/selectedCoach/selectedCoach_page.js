@@ -21,7 +21,7 @@ const Coach = (props) => (
                     <h5 className="mt-3">
                         Hello my name is {props.coach.name}!
                     </h5>
-                    <button type="button" class="btn btn-danger" onClick={() => {
+                    <button type="button" className="btn btn-danger" onClick={() => {
                         props.deleteCoach(props.coach._id)
                     }}>Delete Member</button>
                 </div>
