@@ -1,7 +1,8 @@
 import express from "express";
 import db from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
-
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -33,9 +34,10 @@ router.post("/", async (req, res) => {
         return;
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
     let newDocument = {
         name,
-        password,
+        hashedPassword,
         matriculation_number,
         title,
         age
@@ -59,52 +61,102 @@ function isValidPassword(password) {
 
 // This section will help you update a member by id
 router.patch("/:id", async (req, res) => {
-    const query = { _id: new ObjectId(req.params.id) };
-    const updates = {
-        $set: {
-            name: req.body.name,
-            age: req.body.age,
-            belt: req.body.belt,
-            achievement: req.body.achievement,
-            height: req.body.height,
-            aboutMe: req.body.aboutMe,
-            title: req.body.title,
-            matriculation_number: req.body.matriculation_number
+    const token = req.headers['x-access-token'];
 
+    try{
+        const decoded = jwt.verify(token, 'secret123')
+        const id = decoded.id;
+        if (id == req.params.id) {
 
-
-
-
-
-
+            const query = { _id: new ObjectId(req.params.id) };
+            const updates = {
+                $set: {
+                    name: req.body.name,
+                    age: req.body.age,
+                    belt: req.body.belt,
+                    achievement: req.body.achievement,
+                    height: req.body.height,
+                    aboutMe: req.body.aboutMe,
+                    title: req.body.title,
+                    matriculation_number: req.body.matriculation_number
+        
+        
+        
+        
+        
+        
+        
+                }
+            }
+        
+        
+        
+        
+        
+        
+            let collection = await db.collection("coaches");
+            let result = await collection.updateOne(query, updates);
+            res.status(200).send(result);
+            
+        }else{
+            
+            res.status(401).send("Unauthorized: Invalid token");
+            return;
         }
+    } catch (error) {   
+        res.status(401).send("Unauthorized: Invalid token");
+        return;
     }
-
-    let collection = await db.collection("coaches");
-    let result = await collection.updateOne(query, updates);
-
-    res.status(200).send(result);
+   
 });
 
 
 router.delete("/:id", async (req, res) => {
-    try {
-        const query = { _id: new ObjectId(req.params.id) };
-
-        const collection = await db.collection("coaches");
-        const result = await collection.deleteOne(query);
-
-        if (result.deletedCount === 1) {
-            // coach was deleted
-            res.status(200).send("coach deleted successfully.");
-        } else {
-            // No coach was deleted, indicating it's already deleted or not found
-            res.status(404).send("coach not found or already deleted.");
+    const token = req.headers['x-access-token'];
+    try{
+        const decoded = jwt.verify(token, 'secret123')
+        const id = decoded.id;
+        if (id == req.params.id) {
+            try {
+                const query = { _id: new ObjectId(req.params.id) };
+        
+                const collection = await db.collection("coaches");
+                const result = await collection.deleteOne(query);
+        
+                if (result.deletedCount === 1) {
+                    // Member was deleted
+                    res.status(200).send("Member deleted successfully.");
+                } else {
+                    // No Member was deleted, indicating it's already deleted or not found
+                    res.status(404).send("Member not found or already deleted.");
+                }
+            } catch (error) {
+                // Handle other errors
+                console.error("Error deleting member:", error);
+                res.status(500).send("Internal Server Error");
+            }
+        }else{
+            res.status(401).send("Unauthorized: Invalid token",id,req.params.id);
+            return;
         }
     } catch (error) {
-        // Handle other errors
-        console.error("Error deleting coach:", error);
-        res.status(500).send("Internal Server Error");
+        res.status(402).send("Could Not Decode Token",id,req.params.id);
+        return;
+    }
+    
+});
+
+router.post("/login", async (req, res) => {
+    const coach = await db.collection("coaches").findOne({ name: req.body.name});
+    const isValidPassword = await bcrypt.compare(req.body.password, coach.hashedPassword);
+    if (isValidPassword) {
+        const token = jwt.sign({
+            name: coach.name,
+            
+        },'secret123');
+        return res.json({ status: "success", coach: token });
+    } else {
+        return res.json({ status: "error", error: "Invalid username or password", user: false });
     }
 });
 

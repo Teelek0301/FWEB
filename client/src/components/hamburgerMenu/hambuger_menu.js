@@ -19,8 +19,8 @@ function HamburgerMenu() {
                 <NavbarBrand className="mx-5" href="#" >
                     <span className="navbar-brand mb-0 h1">TaeKwonConnect</span>
                 </NavbarBrand>
-                <Link color="black" to="/SignUp">
-                    <FaUser size={20} color="black"/>
+                <Link color="black" to="/Login">
+                    <FaUser size={20} color="black" />
                 </Link>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav>
@@ -36,7 +36,9 @@ function HamburgerMenu() {
                         <NavLink className="text-dark text-decoration-none mb-1" href="#" to="/News">
                             News
                         </NavLink>
-
+                        <NavLink className="text-dark text-decoration-none mb-1" href="#" to="/Members_JWT">
+                            JWT Members
+                        </NavLink>
                     </Nav>
                 </Navbar.Collapse>
 

@@ -123,7 +123,7 @@ function SignUp() {
 
         setForm({ name: "", password: "", matriculation_number: "", title: "", age: "" });
         setPasswordError("");
-        navigate("/Members");
+        navigate("/Login");
     }
 
     return (

@@ -12,32 +12,34 @@ import SelectedExco from "./components/selectedExco/selectedExco_page";
 import EditCoach from "./components/editCoach/editCoach_page";
 import EditExco from "./components/editExco/editExco_page";
 import EditMember from "./components/editMember/editMember_Page";
+import Login from "./components/login/Login";
 import { Route, Routes } from "react-router-dom";
 
 
 const App = () => {
-  return (
-      <div>
-          <HamburgerMenu />
-          <Routes >
-              <Route path="/" element={<Home/>} />
-              <Route path="/Home" element={<Home/>} />
-              <Route path="/Members" element={<Members/>} />
-              <Route path="/Achievement" element={<Achievement/>} />
-              <Route path="/News" element={<News/>} />
-              <Route path="/SignUp" element={<SignUp/>} />
-              <Route path="/SelectedCoach/:id" element={<SelectedCoach/>} />
-              <Route path="/SelectedExco/:id" element={<SelectedExco/>} />
-              <Route path="/SelectedMember/:id" element={<SelectedMember/>} />
-              <Route path="/EditCoach/:id" element={<EditCoach/>} />
-              <Route path="/EditExco/:id" element={<EditExco/>} />
-              <Route path="/EditMember/:id" element={<EditMember/>} />
-              
+    return (
+        <div>
+            <HamburgerMenu />
+            <Routes >
+                <Route path="/" element={<Home />} />
+                <Route path="/Home" element={<Home />} />
+                <Route path="/Members" element={<Members />} />
+                <Route path="/Achievement" element={<Achievement />} />
+                <Route path="/News" element={<News />} />
+                <Route path="/SignUp" element={<SignUp />} />
+                <Route path="/SelectedCoach/:id" element={<SelectedCoach />} />
+                <Route path="/SelectedExco/:id" element={<SelectedExco />} />
+                <Route path="/SelectedMember/:id" element={<SelectedMember />} />
+                <Route path="/EditCoach/:id" element={<EditCoach />} />
+                <Route path="/EditExco/:id" element={<EditExco />} />
+                <Route path="/EditMember/:id" element={<EditMember />} />
+                <Route path="/Login" element={<Login />} />
 
-          </Routes>
-         
-      </div>
-  );
+
+            </Routes>
+
+        </div>
+    );
 };
 
 export default App;
