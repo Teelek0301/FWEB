@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
 import './login.css';
 import "bootstrap/dist/css/bootstrap.css";
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+import speakeasy from "speakeasy";
+
 
 function App() {
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
+    const [code,setCode] = useState('')
+    let twoFa = false;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -122,82 +128,135 @@ function App() {
 
             if (data.member) {
                 localStorage.setItem('token', data.member);
-                sessionStorage.setItem('member_id', data._id);
-                alert('Login successful')
-                window.location.href = '/Members'
+                sessionStorage.setItem('member_id', data._id, 'secret', data.secret, 'qr', data.qr);
+                alert('Please input 6 digit code on ur google authenticator app');
+                twoFa = true;
             } else {
                 alert('Please check your username and password')
             }
+
+
         }
     }
 
-    return (
-        <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-        }}>
-            <form className='form-container' onSubmit={loginMember}>
-                <div className='mb-3 form-style'>
-                    <label htmlFor="name" className="form-label">
-                        Name
-                    </label>
-                    <input
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        type="text"
-                        placeholder="Name"
-                    />
-                </div>
+    async function checkTwoFa(event) {
+        event.preventDefault();
+         let secret = sessionStorage.getItem('secret');
+        var verified = speakeasy.totp.verify({
+            secret: secret,
+            encoding: 'base32',
+            token: code
 
-                <br />
+        });
+        if (verified) {
+            alert('Login successful')
+            window.location.href = '/Members'
+        } else {
+            alert('Please check your 6 digit code')
+        };
+    };
 
-                <div className='mb-3 form-style'>
-                    <label htmlFor="password" className="form-label">
-                        Password
-                    </label>
-                    <input
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        type="password"
-                        placeholder="Password"
-                    />
-                </div>
-
-                <br />
-
-                <div id="Member_type" className="mb-3">
-                    <h6 className="text-center">
-                        Member Type
-                    </h6>
-                    <div className="mb-3 form-check">
-                        <input type="radio" name="memberType" className="form-check-input" id="Coach" />
-                        <label className="form-check-label" htmlFor="Coach">Coach</label>
+    if (twoFa) {
+        return (
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+            }}>
+                <form className='form-container' onSubmit={checkTwoFa}>
+                    <div className='mb-3 form-style'>
+                        <label htmlFor="sixDigit" className="form-label">
+                            Name
+                        </label>
+                        <input
+                            value={""}
+                            onChange={(e) => setCode(e.target.value)}
+                            type="text"
+                            placeholder="Six Digit Code"
+                        />
                     </div>
-                    <div className="mb-3 form-check">
-                        <input type="radio" name="memberType" className="form-check-input" id="Exco" />
-                        <label className="form-check-label" htmlFor="Exco">Exco</label>
+
+                    <button type="submit" className="btn btn-primary form-btn">
+                        Submit
+                    </button>
+
+
+                </form>
+
+            </div>
+        )
+    } else {
+        return (
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+            }}>
+                <form className='form-container' onSubmit={loginMember}>
+                    <div className='mb-3 form-style'>
+                        <label htmlFor="name" className="form-label">
+                            Name
+                        </label>
+                        <input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            type="text"
+                            placeholder="Name"
+                        />
                     </div>
-                    <div className="mb-3 form-check">
-                        <input type="radio" name="memberType" className="form-check-input" id="Members" />
-                        <label className="form-check-label" htmlFor="Members">Member</label>
+
+                    <br />
+
+                    <div className='mb-3 form-style'>
+                        <label htmlFor="password" className="form-label">
+                            Password
+                        </label>
+                        <input
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            type="password"
+                            placeholder="Password"
+                        />
                     </div>
-                </div>
-                <button type="submit" className="btn btn-primary form-btn">
-                    Login
-                </button>
 
-                <div className='mt-5 text-center'>
-                    Not a Member?{' '}
-                    <a href="/SignUp">Sign Up</a>
-                </div>
+                    <br />
+
+                    <div id="Member_type" className="mb-3">
+                        <h6 className="text-center">
+                            Member Type
+                        </h6>
+                        <div className="mb-3 form-check">
+                            <input type="radio" name="memberType" className="form-check-input" id="Coach" />
+                            <label className="form-check-label" htmlFor="Coach">Coach</label>
+                        </div>
+                        <div className="mb-3 form-check">
+                            <input type="radio" name="memberType" className="form-check-input" id="Exco" />
+                            <label className="form-check-label" htmlFor="Exco">Exco</label>
+                        </div>
+                        <div className="mb-3 form-check">
+                            <input type="radio" name="memberType" className="form-check-input" id="Members" />
+                            <label className="form-check-label" htmlFor="Members">Member</label>
+                        </div>
+                    </div>
+                    <button type="submit" className="btn btn-primary form-btn">
+                        Login
+                    </button>
+
+                    <div className='mt-5 text-center'>
+                        Not a Member?{' '}
+                        <a href="/SignUp">Sign Up</a>
+                    </div>
 
 
-            </form>
+                </form>
 
-        </div>
-    )
+            </div>
+        )
+    }
+
+
 }
 
 export default App

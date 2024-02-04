@@ -27,26 +27,49 @@ router.get("/:id", async (req, res) => {
 
 // This section will help you register a new Exco
 router.post("/", async (req, res) => {
-    const { name, password, matriculation_number, title, age } = req.body;
 
 
-    // Validate password
-    if (!isValidPassword(password)) {
-        res.status(400).send("Invalid password. Password must be 8 characters long, contain at least 1 uppercase letter, 1 lowercase letter, and 1 special character.");
+    try {
+        if (!req.body.password || !req.body.name || !req.body.matriculation_number || !req.body.title || !req.body.age ) {
+            res.status(400).send("Please fill in all fields");
+            return;
+        }
+
+        const { name, password, matriculation_number, title, age} = req.body;
+
+        if (await db.collection("excos").findOne({ name })) {
+            res.status(400).send("Username already exists");
+            return;
+        }
+
+        if (!isValidPassword(password)) {
+            res.status(400).send("password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character.");
+            return;
+        }
+
+
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        let newDocument = {
+            name,
+            hashedPassword,
+            matriculation_number,
+            title,
+            age
+        };
+        let collection = await db.collection("excos");
+        let result = await collection.insertOne(newDocument);
+
+        res.status(201).send(result);
+
+    } catch (error) {
+        res.status(500).send({ ok: false, error: error.message });
         return;
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    let newDocument = {
-        name,
-        hashedPassword,
-        matriculation_number,
-        title,
-        age
-    };
-    let collection = await db.collection("excos");
-    let result = await collection.insertOne(newDocument);
 
-    res.status(201).send(result);
+
+
+
 });
 
 // validate fucntion
@@ -147,17 +170,31 @@ router.delete("/:id", async (req, res) => {
     
 });
 router.post("/login", async (req, res) => {
-    const exco = await db.collection("excos").findOne({ name: req.body.name});
-    const isValidPassword = await bcrypt.compare(req.body.password, exco.hashedPassword);
-    if (isValidPassword) {
-        const token = jwt.sign({
-            name: exco.name,
-            id: exco._id
-            
-        },'secret123');
-        return res.json({ status: "success", exco: token , _id: exco._id});
-    } else {
-        return res.json({ status: "error", error: "Invalid username or password", user: false });
+    try {
+        const { name, password } = req.body;
+        const coach = await db.collection("excos").findOne({ name });
+
+        if (!coach) {
+            return res.status(400).json({ status: "error", error: "Invalid username", user: false });
+        }
+
+        const isValidPassword = await bcrypt.compare(password, coach.hashedPassword);
+
+        if (!isValidPassword) {
+            return res.status(400).json({ status: "error", error: "Invalid password", user: false });
+        }
+
+
+
+
+        const token = jwt.sign({ name: coach.name, id: coach._id }, 'secret123');
+        return res.json({ status: "success", coach: token, _id: coach._id });
+
+
+
+    } catch {
+        res.status(500).send("Internal Server Error");
+        return;
     }
 });
 
