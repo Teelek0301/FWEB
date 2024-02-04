@@ -66,8 +66,6 @@ router.patch("/:id", async (req, res) => {
     try{
         const decoded = jwt.verify(token, 'secret123')
         const id = decoded.id;
-        console.log(id);
-        console.log(req.params.id);
         if (id == req.params.id) {
 
             const query = { _id: new ObjectId(req.params.id) };
@@ -153,9 +151,10 @@ router.post("/login", async (req, res) => {
     if (isValidPassword) {
         const token = jwt.sign({
             name: member.name,
+            id: member._id
             
         },'secret123');
-        return res.json({ status: "success", member: token });
+        return res.json({ status: "success", member: token, _id: member._id});
     } else {
         return res.json({ status: "error", error: "Invalid username or password", user: false });
     }

@@ -7,7 +7,56 @@ import { useParams, NavLink, useNavigate } from "react-router-dom";
 
 
 
+
 const Exco = (props) => (
+    <div className="container">
+        <div className="row ">
+            <div className="col text-center">
+                <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Milad_Kharchegani_at_the_2016_Summer_Olympics.jpg"
+                    alt="image"
+                    width={300}
+                    className="ms-4 rounded-circle"
+
+                />
+                <div>
+                    <h5 className="mt-3">
+                        Hello my name is {props.exco.name}!
+                    </h5>
+                </div>
+            </div>
+            <div className="col-6 ">
+                <h5>
+                    <FaCalendar color="red" /> Age : {props.exco.age}
+                </h5>
+                <h5>
+                    <FaWalking color="orange" /> Belt : {props.exco.belt}
+                </h5>
+                <h5>
+                    <FaTrophy color="yellow" /> Achievements : {props.exco.achievement}
+                </h5>
+                <h5>
+                    <FaArrowCircleUp color="green" /> Height : {props.exco.height}
+                </h5>
+                <h5>
+                    <FaUser color="blue" /> About Me : {props.exco.aboutMe}
+                </h5>
+                <h5>
+                    <FaAddressCard color="indigo" /> Title : {props.exco.title}
+                </h5>
+                <h5>
+                    <FaSchool color="violet" /> School Matriculation Number : {props.exco.matriculation_number}
+                </h5>
+
+
+            </div>
+
+        </div>
+
+    </div>
+);
+
+const ExcoAdmin = (props) => (
     <div className="container">
         <div className="row ">
             <div className="col text-center">
@@ -49,9 +98,15 @@ const Exco = (props) => (
                 <h5>
                     <FaSchool color="violet" /> School Matriculation Number : {props.exco.matriculation_number}
                 </h5>
-                <NavLink color="blue" href="#" to={`/EditExco/${props.exco._id}`}>
-                    Edit this member
-                </NavLink>
+                <h5>
+                    <NavLink color="blue" href="#" to={`/EditExco/${props.exco._id}`}>
+                        Edit this member
+                    </NavLink>
+                </h5>
+                <h5>
+                    <a href="#" onClick={() => { props.logout() }}>Log Out</a>
+                </h5>
+
 
 
             </div>
@@ -91,21 +146,59 @@ function SelectedExco() {
             return;
         }
         await fetch(`http://localhost:5050/excos/${id}`, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: {
+                'x-access-token': localStorage.getItem('token')
+            },
         });
 
-        navigate("/Members");
+        logout();
 
     }
 
-    return (
-        <div className="mt-5 mb-5">
-            <Exco exco={exco} deleteExco={() => deleteExco(exco._id)} />
+    function logout() {
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('exco_id');
+        window.location.href = '/Login';
+    }
 
-        </div>
+    const token = localStorage.getItem('token');
+    if (token) {
+        const member = token;
+        if (member) {
+            if (sessionStorage.getItem('exco_id') == exco._id) {
+                return (
+                    <div className="mt-5 mb-5">
+                        <ExcoAdmin exco={exco} deleteExco={() => deleteExco(exco._id)} logout={() => logout()} />
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="mt-5 mb-5">
+                        <Exco exco={exco} />
+                    </div>
+                );
+            }
+        } else {
+            return (
+                <div className="mt-5 mb-5">
+                    <Exco exco={exco} />
+
+                </div>
 
 
-    );
+            );
+        }
+    }else {
+        return (
+            <div className="mt-5 mb-5">
+                <Exco exco={exco} />
+
+            </div>
+
+
+        );
+    }
 }
 
 export default SelectedExco;

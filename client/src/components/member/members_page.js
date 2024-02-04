@@ -59,23 +59,8 @@ function Members() {
     const [members, setMembers] = useState([]);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            const member = token;
-            if (!member) {
-                localStorage.removeItem('token');
-                window.location.href = '/Login';
-            } else {
-                getCoaches();
-                getExcos();
-                getMembers();
-            }
-        }
         async function getCoaches() {
             const response = await fetch(`http://localhost:5050/coaches`, {
-                headers: {
-                    'x-access-token': localStorage.getItem('token'),
-                }
             });
             if (!response || !response.ok) {
                 const message = `An error occured: ${response ? response.statusText : 'Server not reachable'}`;
@@ -92,9 +77,6 @@ function Members() {
         async function getExcos() {
             try {
                 const response = await fetch(`http://localhost:5050/excos`, {
-                    headers: {
-                        'x-access-token': localStorage.getItem('token'),
-                    }
                 });
                 if (!response.ok) {
                     const message = `An error occurred: ${response.statusText}`;
@@ -112,9 +94,6 @@ function Members() {
         async function getMembers() {
             try {
                 const response = await fetch(`http://localhost:5050/members`, {
-                    headers: {
-                        'x-access-token': localStorage.getItem('token'),
-                    }
                 });
                 if (!response.ok) {
                     const message = `An error occurred: ${response.statusText}`;
@@ -128,6 +107,10 @@ function Members() {
                 console.error('Error:', error);
             }
         }
+        getCoaches();
+        getExcos();
+        getMembers();
+        return;
     }, [coaches.length, excos.length, members.length]);
 
 

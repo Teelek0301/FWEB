@@ -36,6 +36,7 @@ function EditCoach() {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                'x-access-token': localStorage.getItem('token')
             },
             body: JSON.stringify(updatePerson),
         }).catch((error) => {
