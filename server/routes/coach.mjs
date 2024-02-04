@@ -3,8 +3,9 @@ import db from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import speakeasy from "speakeasy";
+import QRCode from "qrcode";
 
-import twoFactor from "node-2fa";
 const router = express.Router();
 
 // This section will help you get a list of all coaches
@@ -29,12 +30,12 @@ router.post("/", async (req, res) => {
 
 
     try {
-        if (!req.body.password || !req.body.name || !req.body.matriculation_number || !req.body.title || !req.body.age || !req.body.twoFactor_token || !req.body.twoFactor_code) {
+        if (!req.body.password || !req.body.name || !req.body.matriculation_number || !req.body.title || !req.body.age ) {
             res.status(400).send("Please fill in all fields");
             return;
         }
 
-        const { name, password, matriculation_number, title, age, twoFactor_token, twoFactor_code } = req.body;
+        const { name, password, matriculation_number, title, age} = req.body;
 
         if (await db.collection("coaches").findOne({ name })) {
             res.status(400).send("Username already exists");
@@ -46,22 +47,29 @@ router.post("/", async (req, res) => {
             return;
         }
 
-        const newSecret = twoFactor.generateSecret({ name: "TwoFactorAuthenticator", account: name });
 
 
         const hashedPassword = await bcrypt.hash(password, 10);
+        let secret = speakeasy.generateSecret({ 
+            name: name
+        });
+
+
+        let qr = await QRCode.toDataURL(secret.otpauth_url);
         let newDocument = {
             name,
             hashedPassword,
             matriculation_number,
             title,
             age,
-            twoFactor: newSecret
+            secret: secret.base32,
+            qr:qr
+
         };
         let collection = await db.collection("coaches");
         let result = await collection.insertOne(newDocument);
 
-        res.status(201).send(result);
+        return res.json({ status: "success", qr:newDocument.qr,result:result});
 
     } catch (error) {
         res.status(500).send({ ok: false, error: error.message });
@@ -72,6 +80,8 @@ router.post("/", async (req, res) => {
 
 
 });
+
+
 
 // validate fucntion
 function isValidPassword(password) {
@@ -173,7 +183,7 @@ router.delete("/:id", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        const { name, password, twoFactor_token, twoFactor_code } = req.body;
+        const { name, password } = req.body;
         const coach = await db.collection("coaches").findOne({ name });
 
         if (!coach) {
@@ -188,25 +198,19 @@ router.post("/login", async (req, res) => {
 
 
 
-        if (twoFactor_token) {
-            const matched = twoFactor.verifyToken(twoFactor_token, twoFactor_code);
 
-            if (!matched) {
-                return res.status(400).send({ ok: false, msg: "Invalid two factor code" });
-            }
+        const token = jwt.sign({ name: coach.name, id: coach._id }, 'secret123');
+        return res.json({ status: "success", coach: token, _id: coach._id ,qr:coach.qr, secret:coach.secret});
 
 
-            const token = jwt.sign({ name: coach.name, id: coach._id }, 'secret123');
-            return res.json({ status: "success", coach: token, _id: coach._id });
 
-        } else {
-            return res.status(200).send({ ok: true, msg: "need 2fa verification", "2fa_token": verify.twofactor });
-        }
     } catch {
         res.status(500).send("Internal Server Error");
         return;
     }
 });
+
+
 
 export default router;
 
