@@ -152,9 +152,10 @@ router.post("/login", async (req, res) => {
     if (isValidPassword) {
         const token = jwt.sign({
             name: exco.name,
+            id: exco._id
             
         },'secret123');
-        return res.json({ status: "success", exco: token });
+        return res.json({ status: "success", exco: token , _id: exco._id});
     } else {
         return res.json({ status: "error", error: "Invalid username or password", user: false });
     }

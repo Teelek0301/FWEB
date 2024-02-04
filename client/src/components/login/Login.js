@@ -1,10 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './login.css';
 import "bootstrap/dist/css/bootstrap.css";
 
 function App() {
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const member = token;
+            if (!member) {
+                localStorage.removeItem('token');
+                window.location.href = '/Login';
+            } else {
+                if (sessionStorage.getItem('coach_id')) {
+                    let coach_id = sessionStorage.getItem('coach_id');
+                    window.location.href = `/selectedCoach/${coach_id}`;
+                } else if (sessionStorage.getItem('exco_id')) {
+                    let exco_id = sessionStorage.getItem('exco_id');
+                    window.location.href = `/selectedExco/${exco_id}`;
+                } else if (sessionStorage.getItem('member_id')) {
+                    let member_id = sessionStorage.getItem('member_id');
+                    window.location.href = `/selectedMember/${member_id}`;
+                }
+            }
+        }
+    }, [])
 
     async function loginMember(event) {
         event.preventDefault()
@@ -13,18 +35,12 @@ function App() {
 
         if (document.getElementById("Coach").checked) {
             selectedMemberTypes.push("Coach");
-
-
         }
         if (document.getElementById("Exco").checked) {
             selectedMemberTypes.push("Exco");
-
-
         }
         if (document.getElementById("Members").checked) {
             selectedMemberTypes.push("Member");
-
-
         }
 
         // Check if more than one member type is selected
@@ -46,70 +62,73 @@ function App() {
         if (selectedMemberTypes[0] === "Coach") {
 
             console.log('Coach fetch')
-        const response = await fetch('http://localhost:5050/coaches/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name,
-                password,
-            }),
-        })
+            const response = await fetch('http://localhost:5050/coaches/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    password,
+                }),
+            })
 
-        const data = await response.json()
-        console.log(data)
+            const data = await response.json()
+            console.log(data)
 
-        if (data.coach) {
-            localStorage.setItem('token', data.coach)
-            alert('Login successful')
-            window.location.href = '/Members'
-        } else {
-            alert('Please check your username and password')
+            if (data.coach) {
+                localStorage.setItem('token', data.coach)
+                sessionStorage.setItem('coach_id', data._id);
+                alert('Login successful')
+                window.location.href = '/Members'
+            } else {
+                alert('Please check your username and password')
+            }
+        } else if (selectedMemberTypes[0] == "Exco") {
+            const response = await fetch('http://localhost:5050/excos/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    password,
+                }),
+            })
+
+            const data = await response.json()
+
+            if (data.exco) {
+                localStorage.setItem('token', data.exco)
+                sessionStorage.setItem('exco_id', data._id);
+                alert('Login successful')
+                window.location.href = '/Members'
+            } else {
+                alert('Please check your username and password')
+            }
+        } else if (selectedMemberTypes[0] == "Member") {
+            const response = await fetch('http://localhost:5050/members/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    password,
+                }),
+            })
+
+            const data = await response.json()
+
+            if (data.member) {
+                localStorage.setItem('token', data.member);
+                sessionStorage.setItem('member_id', data._id);
+                alert('Login successful')
+                window.location.href = '/Members'
+            } else {
+                alert('Please check your username and password')
+            }
         }
-    } else if (selectedMemberTypes[0] == "Exco") {
-        const response = await fetch('http://localhost:5050/excos/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name,
-                password,
-            }),
-        })
-
-        const data = await response.json()
-
-        if (data.exco) {
-            localStorage.setItem('token', data.exco)
-            alert('Login successful')
-            window.location.href = '/Members'
-        } else {
-            alert('Please check your username and password')
-        }
-    } else if (selectedMemberTypes[0] == "Member") {
-        const response = await fetch('http://localhost:5050/members/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name,
-                password,
-            }),
-        })
-
-        const data = await response.json()
-
-        if (data.member) {
-            localStorage.setItem('token', data.member)
-            alert('Login successful')
-            window.location.href = '/Members'
-        } else {
-            alert('Please check your username and password')
-        }
-    }
     }
 
     return (
