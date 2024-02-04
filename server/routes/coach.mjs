@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 
+
 const router = express.Router();
 
 // This section will help you get a list of all coaches
@@ -183,7 +184,7 @@ router.delete("/:id", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        const { name, password } = req.body;
+        const { name, password, sixDigitCode } = req.body;
         const coach = await db.collection("coaches").findOne({ name });
 
         if (!coach) {
@@ -196,19 +197,31 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ status: "error", error: "Invalid password", user: false });
         }
 
-
-
-
-        const token = jwt.sign({ name: coach.name, id: coach._id }, 'secret123');
-        return res.json({ status: "success", coach: token, _id: coach._id ,qr:coach.qr, secret:coach.secret});
-
-
-
-    } catch {
-        res.status(500).send("Internal Server Error");
-        return;
+        try {
+            if (checkTwoFa(sixDigitCode, coach.secret) === true) {
+                const token = jwt.sign({ name: coach.name, id: coach._id }, 'secret123');
+                return res.json({ status: "success", coach: token, _id: coach._id});
+            } else {
+                return res.status(400).json({ status: "error", error: "Invalid 6 digit code", user: false });
+            }
+        } catch (error) {
+            console.error("Error checking 2FA:", error);
+            return res.status(500).json({ status: "error", error: "Internal Server Error", user: false });
+        }
+    } catch (error) {
+        console.error("Error logging in:", error);
+        return res.status(500).json({ status: "error", error: "Internal Server Error", user: false });
     }
 });
+function checkTwoFa(code,secret) {
+    var verified = speakeasy.totp.verify({
+        secret: secret,
+        encoding: 'base32',
+        token: code
+
+    });
+    return verified;
+};
 
 
 

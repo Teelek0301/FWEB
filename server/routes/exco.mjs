@@ -3,7 +3,8 @@ import db from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+import speakeasy from "speakeasy";
+import QRCode from "qrcode";
 
 
 const router = express.Router();
@@ -50,17 +51,26 @@ router.post("/", async (req, res) => {
 
 
         const hashedPassword = await bcrypt.hash(password, 10);
+        let secret = speakeasy.generateSecret({ 
+            name: name
+        });
+
+
+        let qr = await QRCode.toDataURL(secret.otpauth_url);
         let newDocument = {
             name,
             hashedPassword,
             matriculation_number,
             title,
-            age
+            age,
+            secret: secret.base32,
+            qr:qr
+
         };
         let collection = await db.collection("excos");
         let result = await collection.insertOne(newDocument);
 
-        res.status(201).send(result);
+        return res.json({ status: "success", qr:newDocument.qr,result:result});
 
     } catch (error) {
         res.status(500).send({ ok: false, error: error.message });
@@ -171,31 +181,45 @@ router.delete("/:id", async (req, res) => {
 });
 router.post("/login", async (req, res) => {
     try {
-        const { name, password } = req.body;
-        const coach = await db.collection("excos").findOne({ name });
+        const { name, password,sixDigitCode } = req.body;
+        const exco = await db.collection("excos").findOne({ name });
 
-        if (!coach) {
+        if (!exco) {
             return res.status(400).json({ status: "error", error: "Invalid username", user: false });
         }
 
-        const isValidPassword = await bcrypt.compare(password, coach.hashedPassword);
+        const isValidPassword = await bcrypt.compare(password, exco.hashedPassword);
 
         if (!isValidPassword) {
             return res.status(400).json({ status: "error", error: "Invalid password", user: false });
         }
 
-
-
-
-        const token = jwt.sign({ name: coach.name, id: coach._id }, 'secret123');
-        return res.json({ status: "success", coach: token, _id: coach._id });
-
-
+        try {
+            if (checkTwoFa(sixDigitCode, exco.secret) === true) {
+                const token = jwt.sign({ name: exco.name, id: exco._id }, 'secret123');
+                return res.json({ status: "success", exco: token, _id: exco._id});
+            } else {
+                return res.status(400).json({ status: "error", error: "Invalid 6 digit code", user: false });
+            }
+        } catch (error) {
+            console.error("Error checking 2FA:", error);
+            return res.status(500).json({ status: "error", error: "Internal Server Error", user: false });
+        }
 
     } catch {
         res.status(500).send("Internal Server Error");
         return;
     }
 });
+
+function checkTwoFa(code,secret) {
+    var verified = speakeasy.totp.verify({
+        secret: secret,
+        encoding: 'base32',
+        token: code
+
+    });
+    return verified;
+};
 
 export default router;

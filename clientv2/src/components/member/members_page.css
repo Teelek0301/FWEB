@@ -1,0 +1,11 @@
+.members-container {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.members {
+  margin-right: 20px;
+
+}
